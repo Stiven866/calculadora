@@ -1,23 +1,82 @@
-import logo from './logo.svg';
-import './App.css';
-
+import { useState } from "react";
+import "./assets/styles.css";
+import axios from "axios";
 function App() {
+  const [input, setInput] = useState("");
+  const calcBtns = [];
+  [9, 8, 7, 6, 5, 4, 3, 2, 1, 0, ".", "%"].forEach((item) => {
+    calcBtns.push(
+      <button
+        onClick={(e) => {
+          setInput(input + e.target.value);
+        }}
+        value={item}
+        key={item}
+      >
+        {item}
+      </button>
+    );
+  });
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div className="wrapper">
+      {" "}
+      <div className="show-input">{input}</div>
+      <div className="digits flex">{calcBtns}</div>
+      <div className="modifiers subgrid">
+        {/* clear button */}
+
+        <button onClick={() => setInput(input.substr(0, input.length - 1))}>
+          Clear
+        </button>
+
+        {/* clear all */}
+        <button onClick={() => setInput("")} value="">
+          AC
+        </button>
+      </div>
+      <div className="operations subgrid">
+        {/* add button */}
+        <button onClick={(e) => setInput(input + e.target.value)} value="+">
+          +
+        </button>
+
+        {/* minus btn */}
+        <button onClick={(e) => setInput(input + e.target.value)} value="-">
+          {" "}
+          -{" "}
+        </button>
+
+        <button onClick={(e) => setInput(input + e.target.value)} value="*">
+          {" "}
+          *
+        </button>
+
+        <button onClick={(e) => setInput(input + e.target.value)} value="/">
+          {" "}
+          /
+        </button>
+        {/* "=" btn */}
+        <button
+          onClick={(e) => {
+            try {
+              /*setInput(
+                String(eval(input)).length > 3 &&
+                  String(eval(input)).includes(".")
+                  ? String(eval(input).toFixed(4))
+                  : String(eval(input))
+              );*/
+              axios("http://localhost:8080/calcular/suma?op1=50&op2=6", {
+                method: "GET",
+              }).then((res) => console.log(res));
+            } catch (e) {
+              console.log(e);
+            }
+          }}
+          value="="
         >
-          Learn React
-        </a>
-      </header>
+          =
+        </button>
+      </div>
     </div>
   );
 }
